@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Create your content</title>
+        <link rel="icon" href="/images/icon" type="image/png" sizes="16x16">
     </head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
     <style>
@@ -23,6 +24,14 @@
             padding-top: 10px;
         }
 
+        .a{
+            background:url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSbOLAxk9yX7p0HqVKWLexRwfDiB2e0HjaH4EpxNgTH9gF-OW-S&usqp=CAU');
+            background-size: auto 100%;
+            background-position: left center;
+            background-repeat: no-repeat;
+            font-weight: 500;
+            padding-left:60px !important;
+        }
        
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -44,15 +53,18 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h5>Directories</h5>
-                        <ol id='list'>
-                            <li>dads</li>
-                        </ol>
+                        <div style="width: 200px;">
+                            <ol class="list-group" id='list'>
+                                <li>dads</li>
+                            </ol>
+                        </div>
+                        
                     </div>
                     <div class="col-md-4">
                         
                             <div class="form-group">
-                              <label for="">Directory name</label>
-                              <input type="text" class="form-control" id="dirName" placeholder="Untitled">
+                              <label for="dirName">Directory name</label>
+                              
                             </div>
                             <div class="form-group">
                                 <button onclick="create()" class="btn btn-sm btn-dark">Create</button>
@@ -67,12 +79,20 @@
 </html>
 
 <script>
-
+    const idStr='qtp'+Math.round(Math.random()*5000000000);
+    function inpCreation(){
+        let label = document.querySelector('label[for="dirName"]');
+        let inp = document.createElement('input');
+        inp.className = 'form-control';
+        inp.id = idStr;
+        inp.setAttribute('placeholder','Please give a valid name')
+        $(label).after($(inp));
+    }
     function render(list) {
         let con = '';
         const listOL = document.getElementById('list');
         list.forEach(function (el) {
-            con = con + '<li><a target="_blank" href="/practice/' + el + '">' + el + '</a></li>';
+            con = con + '<a class="a list-group-item list-group-item-action" target="_blank" href="/practice/' + el + '">' + el + '</a>';
         });
 
         listOL.innerHTML = con;
@@ -89,21 +109,27 @@
     }
 
     function create() {
-        let val = $('#dirName').val();
+        let val = $('#' + idStr).val();
         val = val.trim();
-        val = val.split(' ').join('_');
-        $.ajax({
-            url: '/api/create/' + val,
-            type: 'post',
-            data: {},
-            success: function (data) {
-                render(data.list);
-            },
-            error: function () {
-                alert('Error, Folder creation aborted!');
-            }
-        });
+        if (val.length) {
+            val = val.split(' ').join('_');
+            $.ajax({
+                url: '/api/create/' + val,
+                type: 'post',
+                data: {},
+                success: function (data) {
+                    render(data.list);
+                },
+                error: function () {
+                    alert('Error, Folder creation aborted!');
+                }
+            });
+        }
     }   
 
     getList();
+    inpCreation();
+    
+
+
 </script>

@@ -27,6 +27,10 @@ const getUpdatedList = ()=>{
 
 app.use('/practice',express.static('practice'));
 
+app.get('/images/icon',(req,res)=>{
+    res.sendFile(`${__dirname}/app/icon.png`);
+});
+
 app.get('/',(req,res)=>{    
     res.sendFile(__dirname+'/app/index.html');    
 });
@@ -53,4 +57,5 @@ app.post('/api/create/:dirName',(req,res)=>{
 app.listen(port,()=>{
     const t = chalk.magenta(`Application started at `)+chalk.blue(`http://localhost:${port}`);
     getContent();
+    console.log(t);
 });
