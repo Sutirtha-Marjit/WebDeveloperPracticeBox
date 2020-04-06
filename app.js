@@ -1,4 +1,5 @@
 const express = require('express');
+const rimraf = require("rimraf");
 const app = express();
 const fs = require('fs');
 const chalk = require('chalk');
@@ -29,6 +30,14 @@ app.use('/practice',express.static('practice'));
 
 app.get('/images/icon',(req,res)=>{
     res.sendFile(`${__dirname}/app/icon.png`);
+});
+
+app.delete('/api/del/:file',(req,res)=>{
+    const path = `${__dirname}/practice/${req.params.file}`;
+    rimraf(path,()=>{
+        res.json({path});
+    });
+    
 });
 
 app.get('/',(req,res)=>{    
