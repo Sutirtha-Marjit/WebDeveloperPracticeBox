@@ -20,8 +20,15 @@ const getContent = ()=>{
 };
 
 const getUpdatedList = ()=>{
+  const dataArr=[];  
   const list= fs.readdirSync(`${__dirname}/${staticdDir}`);
-  return list;
+  list.forEach((el,i)=>{
+      const status  = fs.statSync(`${__dirname}/${staticdDir}/${el}`);
+      
+      dataArr.push({dir:el,birthtime:status.birthtime,isDir:status.isDirectory()});
+      
+  })
+  return dataArr;
 };
 
 

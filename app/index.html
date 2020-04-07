@@ -109,12 +109,15 @@
             let con = '';
             const listOL = document.getElementById('list');
             list.forEach(function (el,i) {
-                con = con + `<tr>
+                if(el.isDir){
+                    con = con + `<tr>
                    <td>${i}</td> 
-                   <td><a target="_blank" href="/practice/${el}">${el}</a></td>
-                   <td></td>
-                   <td><button onclick="del('${el}')" class="btn btn-sm btn-outline-light">Delete</button></td>
+                   <td><a target="_blank" href="/practice/${el.dir}">${el.dir}</a></td>
+                   <td>${new Date(el.birthtime).toDateString()}</td>
+                   <td><button onclick="del('${el.dir}')" class="btn btn-sm btn-outline-light">Delete</button></td>
                 </tr>`
+                }
+                
                 //con = con + '<a class="a list-group-item list-group-item-action" target="_blank" href="/practice/' + el + '">' + el + '</a>';
             });
     
