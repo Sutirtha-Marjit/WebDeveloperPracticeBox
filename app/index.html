@@ -79,7 +79,7 @@
                     con = con + `<tr>
                    <td>${i}</td> 
                    <td><a target="_blank" href="/practice/${el.dir}">${el.dir}</a></td>
-                   <td>${new Date(el.birthtime).toDateString()}</td>
+                   <td>${new Date(el.birthtime).toDateString()} - ${new Date(el.birthtime).toLocaleTimeString()}</td>
                    <td><button onclick="del('${el.dir}')" class="btn btn-sm btn-outline-light">Delete</button></td>
                 </tr>`
                 }
@@ -100,6 +100,10 @@
                 url: '/api/list',
                 type: 'GET',
                 success: function (data) {
+                    
+                    data.list.sort(function(a,b){
+                      return  ((new Date(b.birthtime).getTime()- new Date(a.birthtime).getTime()))
+                    });
                     render(data.list);
                 }
             });
