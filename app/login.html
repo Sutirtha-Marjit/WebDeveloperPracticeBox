@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>WebDeveloper practice box</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/api/style" />
+</head>
+
+<body class="app-bg">
+    <div class="bg"></div>
+    <div class="content">
+        <div class="name-box bg-light">
+            <form name="username">
+                <input type="text" name="name_save" placeholder="Type your name and press enter!" />
+            </form>
+        </div>
+        <div style="text-align:center;">
+            <img style="width:60px; text-align: center;" src="/api/smile"/>
+        </div>
+        
+    </div>
+</body>
+<script>
+    $('form[name="username"]').on('submit',(e)=>{
+        e.preventDefault();
+        const nVal = $('input[name="name_save"]').val().trim();
+        if(nVal){
+            $.post(`/api/name/set/${nVal}`,function(){   
+                window.location.reload();
+            });
+            
+        }
+        
+        
+    });
+</script>
+</html>
