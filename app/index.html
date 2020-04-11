@@ -5,47 +5,9 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="/api/style"/>
     </head>
-    <style>
-
-    .bg{
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top:0px;
-            left:0px;
-            background:url('https://i.pinimg.com/originals/2a/d7/66/2ad7668124a3663291cb41efccf00cb5.jpg');
-            background-repeat: no-repeat;
-            background-size: 120% auto;
-            background-position: left center;
-            opacity: 0.1;
-            z-index: 0;
-        }
-        .content{
-            position: relative;
-            z-index: 2;
-        }
-        .app-bg{
-            background:linear-gradient(to left, #48159d, #7817d8);
-            margin:0px;
-            padding:0px;
-        }
-        .header{
-            background:linear-gradient(to left, #000, #555);
-            height:50px;            
-        }
-        *{
-            font-family: 'Ropa Sans', sans-serif;
-        }
-        h1,h2,h3,h4,h5,h6{
-            font-family: 'Righteous', cursive;
-        }
-
-        body.app-bg a,body.app-bg a:active{
-               color:#fff;             
-        }
-        
-    </style>
+    
     <body class="app-bg">
         <div class="bg"></div>
         <div class="content">
@@ -70,6 +32,10 @@
         </div>
         <div class="body">
             <div class="container-fluid">
+                <br/>
+                <div class="text-light">                    
+                    <h4><span>Welcome </span> &nbsp;<span id="user">...</span></h4>
+                </div>
                 <div class="row">
                     
                     <div class="col-md-12">
@@ -109,12 +75,15 @@
             let con = '';
             const listOL = document.getElementById('list');
             list.forEach(function (el,i) {
-                con = con + `<tr>
+                if(el.isDir){
+                    con = con + `<tr>
                    <td>${i}</td> 
-                   <td><a target="_blank" href="/practice/${el}">${el}</a></td>
-                   <td></td>
-                   <td><button onclick="del('${el}')" class="btn btn-sm btn-outline-light">Delete</button></td>
+                   <td><a target="_blank" href="/practice/${el.dir}">${el.dir}</a></td>
+                   <td>${new Date(el.birthtime).toDateString()}</td>
+                   <td><button onclick="del('${el.dir}')" class="btn btn-sm btn-outline-light">Delete</button></td>
                 </tr>`
+                }
+                
                 //con = con + '<a class="a list-group-item list-group-item-action" target="_blank" href="/practice/' + el + '">' + el + '</a>';
             });
     
@@ -122,6 +91,11 @@
         }
     
         function getList() {
+            $.getJSON('/api/user',function(data){
+                console.log($('#user'));
+                $('#user').text(data.name);
+                
+            });
             $.ajax({
                 url: '/api/list',
                 type: 'GET',

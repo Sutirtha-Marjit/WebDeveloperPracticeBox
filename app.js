@@ -6,6 +6,16 @@ const chalk = require('chalk');
 const port = 7800;
 const staticdDir = 'practice';
 app.fileRawData = null;
+
+const validateUserData = (data)=>{
+    
+    if(data && data.userName && data.name ){
+      return true;
+    }
+
+    return false;
+ };
+
 const getContent = ()=>{
     app.fileRawData = fs.readFileSync('./content.fracto',{encoding:'utf8'});
     fs.stat(`${__dirname}/${staticdDir}`,(error,stat)=>{
@@ -20,8 +30,15 @@ const getContent = ()=>{
 };
 
 const getUpdatedList = ()=>{
+  const dataArr=[];  
   const list= fs.readdirSync(`${__dirname}/${staticdDir}`);
-  return list;
+  list.forEach((el,i)=>{
+      const status  = fs.statSync(`${__dirname}/${staticdDir}/${el}`);
+      
+      dataArr.push({dir:el,birthtime:status.birthtime,isDir:status.isDirectory()});
+      
+  })
+  return dataArr;
 };
 
 
@@ -32,6 +49,13 @@ app.get('/images/icon',(req,res)=>{
     res.sendFile(`${__dirname}/app/icon.png`);
 });
 
+app.get('/api/user',(req,res)=>{
+ let idData = fs.readFileSync(`${__dirname}/id.fracto`,{encoding:'utf8'});
+ idData = JSON.parse(idData)
+ res.json(idData);
+ 
+});
+
 app.delete('/api/del/:file',(req,res)=>{
     const path = `${__dirname}/practice/${req.params.file}`;
     rimraf(path,()=>{
@@ -40,10 +64,49 @@ app.delete('/api/del/:file',(req,res)=>{
     
 });
 
-app.get('/',(req,res)=>{    
-    res.sendFile(__dirname+'/app/index.html');    
+app.get('/api/style',(req,res)=>{
+    res.sendFile(__dirname+'/app/common.css');
 });
 
+app.post('/api/name/set/:val',(req,res)=>{
+    const content = JSON.stringify({name:req.params.val,userName:req.params.val});
+    fs.writeFileSync(`${__dirname}/id.fracto`,content);
+    res.json({});
+});
+
+app.get('/',(req,res)=>{  
+
+      
+    fs.readFile(__dirname+'/id.fracto','utf8',(error,data)=>{
+        let dataObj=null;
+        let signal=false;
+        if(error){
+            console.log(chalk.red('Error'));
+            res.sendFile(__dirname+'/app/login.html')
+        }else{
+            try{
+                dataObj = JSON.parse(data) 
+                signal = validateUserData(dataObj);
+            }catch(e){
+                signal=false;
+            }
+            
+            if(signal){
+                res.sendFile(__dirname+'/app/index.html');
+            }else{
+
+                
+                res.sendFile(__dirname+'/app/login.html')  
+            }
+        }
+        
+    })
+        
+});
+
+app.get('/api/smile',(req,res)=>{
+    res.sendFile(`${__dirname}/app/icon.face.svg`);
+})
 
 
 app.get('/api/list',(req,res)=>{
